@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Creative value framework</title>
+<style>
+  :root{
+    --ink:#1A1A1A;
+    --paper:#FFFFFF;
+
+    --tacit-bg:#48484A;
+    --tacit-line:#2A2A2C;
+    --mind-bg:#6D6D6E;
+    --mind-line:#3F3F40;
+    --stages-head:#6FA8D8;
+    --stages-line:#2F5F8A;
+    --stages-body:#BFDCF2;
+    --practices-head:#F6F6F4;
+    --practices-line:#B9B9B4;
+    --practices-body:#FAFAF8;
+    --practical-bg:#E4E4E1;
+    --practical-line:#ABABA6;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:#F5F4F1;
+    color:var(--ink);
+    font-family:-apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    padding:40px 20px 70px;
+    font-size:14px;
+  }
+
+  .wrap{max-width:1240px;margin:0 auto;}
+
+  .intro{max-width:640px;margin:0 auto 30px;text-align:center;}
+  .intro h1{font-size:20px;font-weight:600;margin:0 0 6px;}
+  .intro p{font-size:13.5px;color:#4A4944;line-height:1.6;margin:0;}
+  .intro .hint{display:inline-block;margin-top:12px;font-size:12px;color:#6B6A64;}
+
+  .challenge{
+    max-width:460px;
+    margin:0 auto 20px;
+    text-align:center;
+    background:#fff;
+    border:2px solid #2C3B4F;
+    border-radius:6px;
+    padding:12px 20px;
+    font-size:17px;
+    font-weight:600;
+  }
+
+  .headers{
+    display:grid;
+    grid-template-columns: 0.7fr 1fr 0.9fr 1.6fr 0.75fr;
+    gap:10px;
+    margin-bottom:10px;
+  }
+  .col-head{
+    text-align:center;
+    padding:10px 8px;
+    border-radius:999px;
+    font-weight:700;
+    font-size:14.5px;
+    line-height:1.2;
+  }
+  .head-tacit{background:var(--tacit-bg);border:2.5px solid var(--tacit-line);color:#FFFFFF;}
+  .head-mind{background:var(--mind-bg);border:2.5px dashed var(--mind-line);color:#FFFFFF;}
+  .head-stages{background:var(--stages-head);border:2.5px solid var(--stages-line);color:#153450;}
+  .head-practices{background:var(--practices-head);border:2.5px dashed var(--practices-line);color:#3A3A38;}
+  .head-practical{background:var(--practical-bg);border:2.5px solid var(--practical-line);color:#3A3A38;}
+
+  .table-frame{
+    border:2.5px solid var(--ink);
+    border-radius:6px;
+  }
+  .grid{
+    display:grid;
+    grid-template-columns: 0.7fr 1fr 0.9fr 1.6fr 0.75fr;
+  }
+
+  .cell{
+    padding:14px 14px;
+    line-height:1.5;
+    font-size:12.5px;
+    border-right:2px dashed var(--ink);
+    border-bottom:2px solid var(--ink);
+  }
+  .cell:nth-child(5n){border-right:none;}
+  .last-row .cell{border-bottom:none;}
+  .cell:first-child{border-top-left-radius:4px;border-bottom-left-radius:4px;}
+  .cell:nth-child(5){border-top-right-radius:4px;border-bottom-right-radius:4px;}
+
+  .cell ul{margin:0;padding:0;list-style:none;}
+  .cell li{margin-bottom:7px;}
+  .cell li:last-child{margin-bottom:0;}
+
+  .cell-tacit{background:var(--tacit-bg);color:#FFFFFF;}
+  .cell-mind{
+    background:var(--mind-bg);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+  }
+  .cell-mind .state-name{font-weight:700;font-size:16px;color:#FFFFFF;}
+  .cell-stages{background:var(--stages-body);}
+  .cell-practices{background:var(--practices-body);}
+  .cell-practical{background:var(--practical-bg);color:#2A2A28;}
+
+  .cell-tacit .term, .cell-mind .term{border-bottom-color:rgba(255,255,255,0.6);}
+  .cell-tacit .term:hover, .cell-tacit .term:focus-visible,
+  .cell-mind .term:hover, .cell-mind .term:focus-visible{background:rgba(255,255,255,0.15);}
+
+  .practice-cloud{display:flex;flex-wrap:wrap;align-items:flex-start;gap:10px 18px;}
+  .practice-cloud .chip{display:inline-block;line-height:1.4;position:relative;z-index:1;}
+  .practice-cloud .chip:hover, .practice-cloud .chip:focus-within{z-index:10;}
+  .practice-cloud .up1{transform:translateY(-5px);}
+  .practice-cloud .up2{transform:translateY(-9px);}
+  .practice-cloud .down1{transform:translateY(5px);}
+  .practice-cloud .down2{transform:translateY(9px);}
+
+  .loop-row{
+    position:relative;
+    height:0;
+  }
+  .loop-icon{
+    position:absolute;
+    top:-15px;
+    transform:translateX(-50%);
+    width:30px;height:30px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#F5F4F1;
+    border-radius:50%;
+  }
+  .loop-icon.at-a{left:14.1%;}
+  .loop-icon.at-b{left:84.9%;}
+
+  .intervention-row{
+    display:grid;
+    grid-template-columns: 0.7fr 1fr 0.9fr 1.6fr 0.75fr;
+    margin-top:22px;
+  }
+  .intervention-pill{
+    grid-column: 3;
+    text-align:center;
+    background:var(--stages-head);
+    border:2.5px dashed var(--stages-line);
+    color:#153450;
+    border-radius:999px;
+    padding:10px 18px;
+    font-weight:700;
+    font-size:14.5px;
+  }
+
+  /* stages column pops out as a taller, elevated card */
+  .grid .cell.cell-stages{
+    background:var(--stages-body);
+    border:2.5px solid var(--stages-line);
+    border-radius:10px;
+    margin:-16px 4px;
+    padding:26px 16px;
+    position:relative;
+    z-index:5;
+    box-shadow:0 3px 10px rgba(0,0,0,0.16);
+  }
+
+  /* tooltip terms */
+  .term{
+    border-bottom:1.5px dotted var(--ink);
+    cursor:help;
+    position:relative;
+    outline-offset:2px;
+  }
+  .term:hover, .term:focus-visible{ background:rgba(0,0,0,0.06); border-radius:2px; }
+
+  .term::after{
+    content:attr(data-tip);
+    position:absolute;
+    left:50%;
+    bottom:calc(100% + 9px);
+    transform:translateX(-50%) translateY(4px);
+    width:220px;
+    background:#1E1C18;
+    color:#F3F1EA;
+    font-weight:400;
+    font-size:12px;
+    line-height:1.5;
+    padding:9px 11px;
+    border-radius:7px;
+    opacity:0;
+    visibility:hidden;
+    transition:opacity .12s ease, transform .12s ease;
+    z-index:20;
+    pointer-events:none;
+    text-align:left;
+  }
+  .term::before{
+    content:"";
+    position:absolute;
+    left:50%;
+    bottom:calc(100% + 3px);
+    transform:translateX(-50%);
+    border:6px solid transparent;
+    border-top-color:#1E1C18;
+    opacity:0;
+    visibility:hidden;
+    transition:opacity .12s ease;
+    z-index:20;
+  }
+  .term:hover::after, .term:focus-visible::after,
+  .term:hover::before, .term:focus-visible::before{
+    opacity:1;
+    visibility:visible;
+    transform:translateX(-50%) translateY(0);
+  }
+
+  .term--edge-left::after{left:0;transform:translateX(0) translateY(4px);}
+  .term--edge-left:hover::after, .term--edge-left:focus-visible::after{transform:translateX(0) translateY(0);}
+  .term--edge-left::before{left:18px;}
+
+  .term--edge-right::after{left:auto;right:0;transform:translateX(0) translateY(4px);}
+  .term--edge-right:hover::after, .term--edge-right:focus-visible::after{transform:translateX(0) translateY(0);}
+  .term--edge-right::before{left:auto;right:18px;}
+
+  @media (max-width: 860px){
+    .headers, .grid, .loop-row, .intervention-row{grid-template-columns: 1fr;}
+    .loop-row{display:none;}
+    .intervention-pill{grid-column: 1;}
+    .cell{border-right:none;}
+    .cell:not(.last-row .cell){border-bottom:2px solid var(--ink);}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="intro">
+    <h1>Creative value framework</h1>
+    <p>Hover or tap any underlined term for a short definition.</p>
+  </div>
+
+  <div class="challenge">
+    <span class="term" data-tip="The complex, often ambiguous problem or opportunity that sets the whole process in motion.">Challenge</span>
+  </div>
+
+  <div class="headers">
+    <div class="col-head head-tacit">
+      <span class="term" data-tip="The hard-to-articulate, experiential benefits people gain along the way — shifts in understanding, trust, or behaviour that are felt more than measured.">Tacit value</span>
+    </div>
+    <div class="col-head head-mind">
+      <span class="term" data-tip="The mental mode associated with each stage of the process, from open exploration to focused execution.">Creative state of mind</span>
+    </div>
+    <div class="col-head head-stages">
+      <span class="term" data-tip="The sequence of cognitive phases — rooted in classic creativity theory — that a project moves through from problem to solution.">Stages of a creative process</span>
+    </div>
+    <div class="col-head head-practices">
+      <span class="term" data-tip="The concrete tools, methods and facilitation techniques used to move a group through each stage.">Creative practices</span>
+    </div>
+    <div class="col-head head-practical">
+      <span class="term" data-tip="The tangible, observable outcomes gained — knowledge, networks, innovation, or organisational change.">Practical value</span>
+    </div>
+  </div>
+
+  <div class="table-frame">
+    <div class="grid">
+
+      <div class="cell cell-tacit">
+        <ul>
+          <li>Bridging silos</li>
+          <li>Common understanding</li>
+          <li>Align assumptions</li>
+          <li>Maturation</li>
+        </ul>
+      </div>
+      <div class="cell cell-mind">
+        <span class="state-name term" data-tip="Fully engaging with a problem's complexity — gathering context, mapping stakeholders, and identifying where change could matter most.">Immersion</span>
+      </div>
+      <div class="cell cell-stages">
+        <ul>
+          <li>Assumption about a complex issue</li>
+          <li>Understand the complexity</li>
+          <li>Identify possible leverage points</li>
+          <li>Impact assessment of leverage points</li>
+          <li>Dig deeper in prioritised leverage points</li>
+        </ul>
+      </div>
+      <div class="cell cell-practices">
+        <div class="practice-cloud">
+          <span class="chip up1"><span class="term" data-tip="Identifying the people, groups and organisations affected by or influencing the issue.">Stakeholder mapping</span></span>
+          <span class="chip down2"><span class="term" data-tip="A large-format, systems-oriented mapping technique for visualising complex, interconnected problem landscapes.">Gigamapping</span></span>
+          <span class="chip mid"><span class="term" data-tip="Short for Zoom-Innovation-Potential — a Systems Oriented Design technique for marking and navigating leverage points on a gigamap.">ZIP</span></span>
+          <span class="chip up2"><span class="term" data-tip="Locating and engaging domain experts whose knowledge can inform the process.">Expert mapping</span></span>
+          <span class="chip down1"><span class="term" data-tip="A design process model built on two diverge-converge cycles: first exploring the problem, then the solution.">Double diamond</span></span>
+          <span class="chip up1"><span class="term" data-tip="Gathering qualitative or quantitative information to ground the process in evidence.">Data collection</span></span>
+          <span class="chip down2"><span class="term" data-tip="Coordinating people, tools and activities so the creative process runs coherently.">Orchestration</span></span>
+          <span class="chip mid"><span class="term" data-tip="A Systems Oriented Design method — repeated impact and threshold analysis used to rank and later crystallise the strongest leverage points.">IMP analysis</span></span>
+        </div>
+      </div>
+      <div class="cell cell-practical">
+        <ul>
+          <li>Increased knowledge base</li>
+          <li>Establish stronger networks</li>
+          <li>Gain deeper insights</li>
+          <li>Sorting relevant from irrelevant</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="loop-row">
+    <div class="loop-icon at-a">
+    <svg viewBox="0 0 40 40" width="22" height="22">
+      <path d="M8 14 A14 14 0 0 1 32 14" fill="none" stroke="#1A1A1A" stroke-width="4" stroke-linecap="round"/>
+      <polygon points="29,8 36,14 28,18" fill="#1A1A1A"/>
+      <path d="M32 26 A14 14 0 0 1 8 26" fill="none" stroke="#1A1A1A" stroke-width="4" stroke-linecap="round"/>
+      <polygon points="11,32 4,26 12,22" fill="#1A1A1A"/>
+    </svg>
+    </div>
+    <div class="loop-icon at-b">
+    <svg viewBox="0 0 40 40" width="22" height="22">
+      <path d="M8 14 A14 14 0 0 1 32 14" fill="none" stroke="#1A1A1A" stroke-width="4" stroke-linecap="round"/>
+      <polygon points="29,8 36,14 28,18" fill="#1A1A1A"/>
+      <path d="M32 26 A14 14 0 0 1 8 26" fill="none" stroke="#2E363C" stroke-width="4" stroke-linecap="round"/>
+      <polygon points="11,32 4,26 12,22" fill="#2E363C"/>
+    </svg>
+    </div>
+  </div>
+
+  <div class="table-frame">
+    <div class="grid">
+
+      <div class="cell cell-tacit">
+        <ul>
+          <li>Acknowledge need for change</li>
+          <li>Ownership of change</li>
+          <li>Increased engagement</li>
+        </ul>
+      </div>
+      <div class="cell cell-mind">
+        <span class="state-name term" data-tip="Stepping back to let ideas settle, explore unlikely connections, and test combinations away from direct problem-solving.">Incubation</span>
+      </div>
+      <div class="cell cell-stages">
+        <ul>
+          <li>Selecting relevant take-aways</li>
+          <li>Explore possible paths, links and ideas</li>
+          <li>Generate and test combinations of ideas</li>
+        </ul>
+      </div>
+      <div class="cell cell-practices">
+        <div class="practice-cloud">
+          <span class="chip down1"><span class="term" data-tip="A design process model built on two diverge-converge cycles: first exploring the problem, then the solution.">Double diamond</span></span>
+          <span class="chip up2"><span class="term" data-tip="A systems-thinking technique for questioning what is included or excluded when defining a system.">Boundary critique</span></span>
+          <span class="chip mid"><span class="term" data-tip="A large-format, systems-oriented mapping technique for visualising complex, interconnected problem landscapes.">Gigamapping</span></span>
+          <span class="chip down2"><span class="term" data-tip="Turning selected ideas and leverage points into concrete, articulable concepts.">Concept creation</span></span>
+          <span class="chip up1"><span class="term" data-tip="Deliberately pausing activity to allow reflection and unconscious processing.">Rest</span></span>
+        </div>
+      </div>
+      <div class="cell cell-practical">
+        <ul>
+          <li>Larger toolbox</li>
+          <li>Earlier failing</li>
+          <li>More convincing reasoning</li>
+          <li>Incremental innovation</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="loop-row">
+    <div class="loop-icon at-a">
+    <svg viewBox="0 0 40 40" width="22" height="22">
+      <path d="M8 14 A14 14 0 0 1 32 14" fill="none" stroke="#1A1A1A" stroke-width="4" stroke-linecap="round"/>
+      <polygon points="29,8 36,14 28,18" fill="#1A1A1A"/>
+      <path d="M32 26 A14 14 0 0 1 8 26" fill="none" stroke="#1A1A1A" stroke-width="4" stroke-linecap="round"/>
+      <polygon points="11,32 4,26 12,22" fill="#1A1A1A"/>
+    </svg>
+    </div>
+    <div class="loop-icon at-b">
+    <svg viewBox="0 0 40 40" width="22" height="22">
+      <path d="M8 14 A14 14 0 0 1 32 14" fill="none" stroke="#1A1A1A" stroke-width="4" stroke-linecap="round"/>
+      <polygon points="29,8 36,14 28,18" fill="#1A1A1A"/>
+      <path d="M32 26 A14 14 0 0 1 8 26" fill="none" stroke="#2E363C" stroke-width="4" stroke-linecap="round"/>
+      <polygon points="11,32 4,26 12,22" fill="#2E363C"/>
+    </svg>
+    </div>
+  </div>
+
+  <div class="table-frame">
+    <div class="grid">
+
+      <div class="cell cell-tacit">
+        <ul>
+          <li>Linking patterns</li>
+        </ul>
+      </div>
+      <div class="cell cell-mind">
+        <span class="state-name term" data-tip="The moment strong ideas surface and get selected — sudden clarity on which concept or solution to pursue.">Illumination</span>
+      </div>
+      <div class="cell cell-stages">
+        <ul>
+          <li>Identify strong ideas</li>
+          <li>Choose idea, concept or solution</li>
+        </ul>
+      </div>
+      <div class="cell cell-practices">
+        <div class="practice-cloud">
+          <span class="chip up1"><span class="term" data-tip="Ranking ideas by feasibility, impact or relevance.">Prioritizing</span></span>
+          <span class="chip down2"><span class="term" data-tip="A Systems Oriented Design method — repeated impact and threshold analysis used to rank and later crystallise the strongest leverage points.">IMP analysis</span></span>
+          <span class="chip down1"><span class="term" data-tip="Articulating a concept clearly enough that others can understand and evaluate it.">Description of idea</span></span>
+        </div>
+      </div>
+      <div class="cell cell-practical">
+        <ul>
+          <li>Radical innovation</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="loop-row">
+    <div class="loop-icon at-a">
+    <svg viewBox="0 0 40 40" width="22" height="22">
+      <path d="M8 14 A14 14 0 0 1 32 14" fill="none" stroke="#1A1A1A" stroke-width="4" stroke-linecap="round"/>
+      <polygon points="29,8 36,14 28,18" fill="#1A1A1A"/>
+      <path d="M32 26 A14 14 0 0 1 8 26" fill="none" stroke="#1A1A1A" stroke-width="4" stroke-linecap="round"/>
+      <polygon points="11,32 4,26 12,22" fill="#1A1A1A"/>
+    </svg>
+    </div>
+    <div class="loop-icon at-b">
+    <svg viewBox="0 0 40 40" width="22" height="22">
+      <path d="M8 14 A14 14 0 0 1 32 14" fill="none" stroke="#1A1A1A" stroke-width="4" stroke-linecap="round"/>
+      <polygon points="29,8 36,14 28,18" fill="#1A1A1A"/>
+      <path d="M32 26 A14 14 0 0 1 8 26" fill="none" stroke="#2E363C" stroke-width="4" stroke-linecap="round"/>
+      <polygon points="11,32 4,26 12,22" fill="#2E363C"/>
+    </svg>
+    </div>
+  </div>
+
+  <div class="table-frame">
+    <div class="grid last-row">
+
+      <div class="cell cell-tacit">
+        <ul>
+          <li>AHA! moments</li>
+          <li>Change of behaviour</li>
+        </ul>
+      </div>
+      <div class="cell cell-mind">
+        <span class="state-name term" data-tip="Refining, testing, and communicating the chosen idea until it's acted on and embedded in practice.">Implementation</span>
+      </div>
+      <div class="cell cell-stages">
+        <ul>
+          <li>Testing idea</li>
+          <li>Refining idea</li>
+          <li>Communicating idea</li>
+          <li>Implementing idea</li>
+        </ul>
+      </div>
+      <div class="cell cell-practices">
+        <div class="practice-cloud">
+          <span class="chip down1"><span class="term" data-tip="Adjusting an idea based on feedback or testing results.">Modification</span></span>
+          <span class="chip up2"><span class="term" data-tip="Checking that a refined idea actually works as intended, often through testing and consulting the expert network.">Validation</span></span>
+          <span class="chip mid"><span class="term" data-tip="The point where a tested idea is adopted and changes what people actually do.">Change of action</span></span>
+          <span class="chip down2"><span class="term" data-tip="Framing the idea as a story so it can be communicated persuasively.">Narrative</span></span>
+          <span class="chip up1"><span class="term" data-tip="A Systems Oriented Design practice of checking a proposed solution back against the original gigamap, to see where it fits and where uncertainties remain.">Back-checking</span></span>
+        </div>
+      </div>
+      <div class="cell cell-practical">
+        <ul>
+          <li>Disruptive innovation</li>
+          <li>Emergent properties</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="intervention-row">
+    <div class="intervention-pill">
+      <span class="term" data-tip="An external input or facilitation act that helps a group move from one stage of the process to the next.">Intervention</span>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
